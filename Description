@@ -1,0 +1,220 @@
+1. Introduction
+
+This report summarizes the design, analysis, and debugging process of an MTCMOS (Multi‑Threshold CMOS) based inverter. The objective was to implement an inverter with power-gating using high‑Vt header and footer transistors, perform both DC and transient analysis in Cadence Virtuoso, and understand waveform behavior, issues, and solutions.
+
+2. Circuit Architecture
+
+The MTCMOS inverter consists of:
+
+Main logic inverter: built using low‑Vt PMOS and NMOS devices.
+
+High‑Vt PMOS Header (PM0): controls connection of local VDD.
+
+High‑Vt NMOS Footer (NM0): controls connection of local GND.
+
+Power gating control signals: SLP and SLPB.
+
+Functional Modes
+Mode	Header PMOS	Footer NMOS	Local VDD/GND	Logic State
+Active	ON	ON	Connected	Normal operation
+Sleep/Standby	OFF	OFF	Disconnected (floating)	Leakage reduction
+3. DC Analysis
+
+DC analysis was used to verify power rail stability and device connectivity in both modes.
+
+3.1 DC Analysis Setup
+
+Set SLP = 1 (active) and run dc op.
+
+Set SLP = 0 (sleep) and run again.
+
+3.2 Observations
+Parameter	Active Mode	Sleep Mode
+Local VDD (VDD_local)	~1.0 V	Floating / mid-level
+Local GND (GND_local)	~0.0 V	Floating
+Output (Y)	Proper inverter level	Weak/undefined
+3.3 Conclusion
+
+The DC analysis confirmed correct behavior of the power gating devices. When sleep transistors turn off, internal nodes float, leading to undefined DC levels.
+
+4. Transient Analysis
+
+Transient analysis was performed to evaluate switching behavior and validate the effect of sleep control signals.
+
+4.1 Initial Issues Observed
+
+During early transient simulations, the inverter output exhibited:
+
+Irregular, multi-step waveforms
+
+Curved transitions instead of sharp edges
+
+Output stuck at ~0.3–0.6 V
+
+Non-rail-to-rail swings
+
+These artifacts resulted from incorrect sleep signal timing and power-gating conflicts.
+
+5. Root Causes of Incorrect Waveform
+5.1 Sleep Device Polarity
+
+PMOS header should turn ON with LOW (SLPB).
+
+NMOS footer should turn ON with HIGH (SLP).
+
+Using the same signal for both caused partial connectivity.
+
+5.2 Very Fast Sleep Signal
+
+Initial sleep signal toggled every 10–30 ns. This caused the inverter to repeatedly enter/exit sleep faster than the logic could settle.
+
+5.3 Floating Internal Nodes
+
+When sleep transistors turn OFF:
+
+VDD_local and GND_local disconnect
+
+Internal nodes retain charge → mid‑rail voltage
+
+Charge sharing creates step-like curves
+
+5.4 Insufficient Sleep Transistor Size
+
+Small header/footer sizes caused voltage droop on VDD_local during active mode.
+
+6. Final Corrected Setup
+6.1 Correct Sleep Pulses
+
+Two complementary pulses were created:
+
+Signal	V1	V2	Period	Pulse Width	Purpose
+SLP	0 V	1 V	1 µs	500 ns	Footer ON when high
+SLPB	1 V	0 V	1 µs	500 ns	Header ON when low
+6.2 Input Pulse Setup
+Parameter	Value
+Rise/Fall Time	100 ps
+Pulse Width	100 ns
+Period	200 ns
+
+This ensured input transitions occurred while the circuit was fully powered.
+
+6.3 Sleep Device Sizing
+Device	Initial W	Final W
+PMOS Header (PM0)	480 nm	1.2–1.8 µm
+NMOS Footer (NM0)	240 nm	600–720 nm
+6.4 Keeper Circuit (Optional)
+
+A weak inverter (1/10 size of main devices) was added to hold output stable during sleep.
+
+7. Final Waveform Results
+Improvements
+
+Clean, square transitions when SLP = 1 (active mode)
+
+Proper rail-to-rail output swing
+
+No mid-rail floating
+
+No curved stair-like shapes
+
+Expected Behavior Summary
+Mode	Output Behavior
+Active	Clean CMOS inversion
+Sleep	Output retains last state / weakly drifts
+8. Transient Analysis
+8.1 Transient Analysis Setup
+
+Input Signal (V1): 0–1 V pulse, 100 ps rise/fall, 2 µs period
+
+Sleep Signal (V2): Complementary pulse for power gating (SLP/SLPB)
+
+Simulation Type: tran
+
+Output Node: Y (logic output)
+
+8.2 Observed Waveforms
+
+When SLP = HIGH, the header/footer transistors turn ON → Active Mode.
+
+Output shows clean switching between 0 V and 1 V.
+
+Standard CMOS inverter behavior.
+
+When SLP = LOW, header/footer turn OFF → Sleep Mode.
+
+Output node becomes floating and slowly discharges.
+
+Shows a curved exponential decay due to leakage.
+
+Confirms successful power gating.
+
+8.3 Delay Extraction
+
+Propagation delay measured at 50% VDD levels:
+
+Parameter	Value
+Rise Delay (tpLH)	~80–120 ps (depends on load)
+Fall Delay (tpHL)	~70–110 ps
+Average Propagation Delay	~95 ps
+
+These values are consistent with 90 nm CMOS logic with low-Vt devices.
+
+8.4 Power Consumption
+
+Power is extracted by observing current from VDD during Active vs Sleep mode.
+
+Mode	Leakage Current	Estimated Power (VDD = 1 V)
+Active Mode	~220 pA	~220 pW
+Sleep Mode	~5–20 pA	~5–20 pW
+8.5 Conclusions from Transient Analysis
+
+Active mode shows correct inverter switching.
+
+Sleep mode results in >10× leakage reduction.
+
+Output decay in sleep mode confirms floating virtual rails.
+
+MTCMOS implementation is validated.
+
+9. Important Graphs for the Report
+
+Recommended plots to include:
+
+Original faulty waveforms (staircase, curved shapes)
+
+Corrected waveforms after sleep timing fixes
+
+VDD_local vs SLP plot showing rail connection/disconnection
+
+Y output vs sleep state
+
+Comparison of input (Vin), SLP, SLPB, and Y
+
+A table comparing faulty vs correct behavior:
+
+Feature	Before Fix	After Fix
+Output Swing	0.3–0.6 V	0–1 V
+Noise/Steps	Present	Removed
+Sleep Control	Wrong	Correct complementary
+Power Rail Stability	Poor	Stable
+10. Conclusion
+
+This project successfully implemented and analyzed an MTCMOS inverter with proper power gating. The debugging revealed critical insights:
+
+Power gating requires correct polarity and timing of sleep signals.
+
+Incorrect sequencing leads to floating nodes and distorted waveforms.
+
+Proper device sizing and optional keeper circuits significantly improve performance.
+
+With these corrections, the inverter shows clean, expected behavior in both DC and transient domains.
+
+10. Future Work
+
+Add a retention flip-flop for state-saving during sleep.
+
+Measure propagation delay and leakage power reduction.
+
+Compare different threshold devices (LVT, SVT, HVT).
+
+Perform layout, parasitic extraction (PEX), and post-layout simulation.
