@@ -1,6 +1,6 @@
-# MTM-CMOS Analysis
+# MTCMOS Analysis
 
-This document provides a clear and structured overview of the **MTM-CMOS (Multi-Threshold Multi-Channel MOS)** analysis, covering the concept, methodology, implementation steps, results interpretation, and future improvements.
+This document provides a clear and structured overview of the **MTCMOS (Multi-Threshold CMOS)** analysis, covering the concept, methodology, implementation steps, results interpretation, and future improvements.
 
 ---
 
@@ -28,13 +28,6 @@ Uses **HVT**, **SVT**, and **LVT** devices:
 * **HVT** → low leakage, slow switching.
 * **LVT** → high leakage, fast switching.
 * **SVT** → moderate balance.
-
-### **2. Multi-Channel Length (MTCL)**
-
-* Longer channel → lower leakage, slower switching.
-* Shorter channel → higher leakage, faster switching.
-
-Combining both techniques leads to optimized transistor behavior.
 
 ---
 
