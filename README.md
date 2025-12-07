@@ -6,7 +6,7 @@ This document provides a clear and structured overview of the **MTCMOS (Multi-Th
 
 ## 📌 Introduction
 
-MTM-CMOS is a low-power design technique that uses multiple threshold voltages (V<sub>th</sub>) and multiple transistor channel lengths to optimize power, performance, and leakage. It is widely used in advanced VLSI design to reduce static power without compromising speed.
+MTCMOS is a low-power design technique that uses multiple threshold voltages (V<sub>th</sub>) and multiple transistor channel lengths to optimize power, performance, and leakage. It is widely used in advanced VLSI design to reduce static power without compromising speed.
 
 ---
 
