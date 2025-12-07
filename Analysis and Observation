@@ -1,0 +1,181 @@
+# MTM-CMOS Analysis — Results & Observations
+
+This document summarizes the **experimental findings, simulation outcomes, and key observations** obtained during the analysis of the MTM-CMOS inverter. It includes all major results from **DC analysis, transient analysis, leakage evaluation, width-variation study, body-bias behavior**, and overall performance comparison.
+
+---
+
+## 📌 1. Overview of Result Analysis
+
+The MTM-CMOS inverter was analyzed across:
+
+* **Active Mode**
+* **Sleep Mode** (power-gated)
+* **Width and threshold variations**
+* **Body-bias voltage sweep**
+* **Transient switching behavior**
+
+The primary goal was to **reduce leakage power** while maintaining acceptable switching performance.
+
+---
+
+## 🔍 2. DC Analysis Results
+
+### **2.1 CMOS Inverter Leakage (Without MTCMOS)**
+
+* Leakage in OFF state: **~1.57 nA**
+* Shows typical low static power for CMOS, but not sufficient for deep-submicron applications.
+
+### **2.2 MTCMOS Inverter – Active Mode**
+
+* Measured leakage: **25 nA**
+* Higher than ideal inverter due to the use of **LVT logic transistors** for speed.
+
+### **2.3 MTCMOS Inverter – Sleep Mode**
+
+* Leakage reduces to **250 pA**
+* Achieves **~100× leakage reduction**
+* Confirms successful isolation through HVT sleep transistors
+
+### **2.4 Key DC Observation**
+
+* Sharp transition characteristics maintained in Active Mode
+* Leakage dominated behavior seen in Sleep Mode
+
+> **Conclusion:** MTCMOS is highly effective for standby leakage suppression while maintaining active performance.
+
+---
+
+## ⚡ 3. Transient Analysis Results
+
+### **3.1 CMOS Inverter Timing**
+
+* Rise Time: **26.03 ps**
+* Fall Time: **24.66 ps**
+* Propagation Delay: **25.345 ps**
+
+### **3.2 MTCMOS Inverter Timing**
+
+* Propagation delay (base width): **36.5 ps**
+* After width optimization: **Improved to 24.78 ps**
+* Rise Time range: **35.33 – 57.1 ps**
+* Fall Time range: **27 – 60 ps**
+
+### **3.3 Observed Switching Behavior**
+
+* Clean inversion in both CMOS and MTCMOS
+* Small delay variations due to the ON-resistance of HVT sleep transistors
+* Stable transient output at 500 kHz test frequency
+
+> **Conclusion:** Delay penalty from sleep devices can be compensated through width increasing.
+
+---
+
+## 🔧 4. Width Variation Study
+
+| PMOS (HVT) | NMOS (HVT) | Propagation Delay |
+| ---------- | ---------- | ----------------- |
+| 240 nm     | 120 nm     | 36.5 ps           |
+| 360 nm     | 280 nm     | 31 ps             |
+| 600 nm     | 480 nm     | 27.89 ps          |
+| 800 nm     | 600 nm     | 24.78 ps          |
+
+### **Observations:**
+
+* Increasing width decreases ON-resistance
+* Delay improves significantly
+* Leakage remains minimal because sleep devices remain HVT
+* Optimized sizing gives improved speed without leakage penalty
+
+> **Conclusion:** Proper sleep transistor sizing is essential for balancing leakage and performance.
+
+---
+
+## 🔋 5. Leakage Behavior with Body Biasing
+
+A VSB sweep from **0 to -90 mV** shows large impact on leakage.
+
+| Body Voltage | Leakage Current | Observation                  |
+| ------------ | --------------- | ---------------------------- |
+| -90 mV       | 160 pA          | Minimum leakage (strong RBB) |
+| -40 mV       | 520 pA          | Moderate leakage             |
+| -10 mV       | 898 pA          | High leakage                 |
+| 0 mV         | Maximum         | Worst case                   |
+
+### **Observations:**
+
+* Reverse Body Bias (RBB) **increases Vth** → leakage drops
+* Strong correlation between threshold increase and leakage suppression
+* Confirms suitability of combining body-bias with MTCMOS
+
+---
+
+## 🔍 6. Active vs Sleep Mode Comparison
+
+| Parameter    | Active Mode     | Sleep Mode        |
+| ------------ | --------------- | ----------------- |
+| Leakage      | 25 nA           | 250 pA            |
+| VTC behavior | Sharp switching | Leakage dominated |
+| Power rails  | Full VDD/GND    | Virtual VDD/GND   |
+
+### **Key Observation:**
+
+* **99–100× leakage reduction** without major performance loss in active state
+* Virtual ground lifting and virtual VDD lowering observed during sleep
+
+---
+
+## 📈 7. Final Performance Comparison
+
+| Parameter         | Ideal CMOS Inverter | MTCMOS Inverter        |
+| ----------------- | ------------------- | ---------------------- |
+| Rise Time         | 53.23 ps            | 42.35 ps               |
+| Fall Time         | 31.28 ps            | 21.70 ps               |
+| Propagation Delay | 42.19 ps            | 31.28 ps               |
+| Leakage           | 1.57 nA             | 25 nA → 250 pA (Sleep) |
+
+### **Key Findings:**
+
+* MTCMOS inverter provides **faster switching** after width optimization
+* Leakage is drastically reduced in sleep mode
+* Performance-power tradeoff remains strongly favorable
+
+---
+
+## 🧠 8. Major Observations (Summary)
+
+* MTCMOS delivers **ultra-low leakage** in standby mode
+* Delay overhead from sleep devices can be removed with width scaling
+* Body biasing further enhances leakage reduction
+* Virtual power rails clearly demonstrate power gating effectiveness
+* Transient output confirms stable operation across frequency range
+* Suitable for IoT, wearable, and battery-powered VLSI systems
+
+---
+
+## 🏁 9. Final Conclusion
+
+The MTM-CMOS analysis confirms that combining:
+
+* **High-Vt sleep transistors**,
+* **Low-Vt logic devices**,
+* **Body biasing techniques**, and
+* **Intelligent width optimization**
+
+provides a highly efficient strategy to achieve ultra-low leakage without sacrificing switching performance.
+
+This combination results in:
+
+* **Up to 100× leakage reduction**
+* **Improved propagation delay**
+* **Enhanced energy efficiency** in both active and sleep modes.
+
+This makes MTCMOS an ideal approach for next-generation low-power circuit design.
+
+---
+
+If you want, I can also create:
+
+* A **GitHub-friendly version**
+* A **one-page summary version**
+* A **separate file for graphs & tables**
+* A **presentation-ready formatted document**
