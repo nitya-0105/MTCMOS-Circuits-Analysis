@@ -64,7 +64,7 @@ Uses **HVT**, **SVT**, and **LVT** devices:
 
 ## 📊 Results Summary
 
-* MTM-CMOS significantly reduces leakage in standby mode.
+* MT-CMOS significantly reduces leakage in standby mode.
 * LVT transistors improve switching speed.
 * Optimal configuration selected based on required performance.
 
@@ -93,30 +93,15 @@ Uses **HVT**, **SVT**, and **LVT** devices:
 
 * Implement power-gated MTCMOS with sleep transistors.
 * Use adaptive body biasing to dynamically tune V<sub>th</sub>.
-* Compare MTM-CMOS with FinFET-based low-power techniques.
+* Compare MT-CMOS with FinFET-based low-power techniques.
 * Introduce machine-learning-based leakage prediction.
 
 ---
 
 ## 🧾 Conclusion
 
-MTM-CMOS is an effective method for lowering leakage while meeting performance requirements. This analysis demonstrates how using different transistor thresholds and channel lengths creates a tunable low-power design suitable for modern VLSI applications.
+MT-CMOS is an effective method for lowering leakage while meeting performance requirements. This analysis demonstrates how using different transistor thresholds and channel lengths creates a tunable low-power design suitable for modern VLSI applications.
 
----
 
-## 📎 How to Use This Repository
 
-* Review the schematic files.
-* Run provided testbenches in Cadence.
-* Compare waveforms across different transistor configurations.
-* Modify thresholds and channels to explore further optimization.
-
----
-
-If you want, I can also create:
-
-* A project folder structure
-* A professional PDF version
-* A shorter or more technical README
-* A version suitable for GitHub
 
